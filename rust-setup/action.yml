@@ -1,0 +1,44 @@
+name: "Rust Setup"
+description: "Sets up an environment for running rust commands (clippy, doc, test, etc.)"
+
+inputs:
+  dependencies:
+    required: false
+    description: "A list of ubuntu packages to install"
+  cloudsmith-cargo-registry:
+    required: false
+    description: "The CLOUDSMITH_CARGO_REGISTRY secret"
+  cloudsmith-git-api-key:
+    required: false
+    description: "The CLOUDSMITH_GIT_API_KEY secret"
+  cache-key:
+    required: false
+    description: "A component of the key used for caching"
+
+runs:
+  using: composite
+  steps:
+    - name: install dependencies
+      shell: bash
+      if: ${{ inputs.dependencies }}
+      run: echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+    - name: setup cloudsmith cargo registry
+      shell: bash
+      if: ${{ inputs.cloudsmith-cargo-registry }}
+      run: |
+        git config --global credential.helper store
+        echo '${{ inputs.cloudsmith-cargo-registry }}' > ~/.cargo/config
+    - name: setup cloudsmith git api key
+      shell: bash
+      if: ${{ inputs.cloudsmith-git-api-key }}
+      run: |
+        git config --global credential.helper store
+        echo '${{ inputs.cloudsmith-git-api-key }}' > ~/.git-credentials
+    - name: cache
+      if: ${{ inputs.cache-key }}
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          src/target
+        key: ${{ runner.os }}-${{ inputs.cache-key }}-${{ hashFiles('src/**/Cargo.*') }}
