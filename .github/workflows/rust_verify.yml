@@ -1,5 +1,4 @@
 name: Rust Verify
-description: "Shared workflow to run cargo fmt, clippy, doc, and test."
 
 on:
   workflow_call:
