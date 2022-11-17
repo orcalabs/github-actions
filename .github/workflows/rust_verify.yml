@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup
+        uses: orcalabs/github-actions/rust-setup@master
         with:
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           rust-version: ${{ inputs.rust-version }}
