@@ -31,12 +31,6 @@ jobs:
         with:
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           rust-version: ${{ inputs.rust-version }}
-        # uses: actions/checkout@v3
-        # with:
-        #   repository: orcalabs/github-actions
-        #   ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        #   path: .github/actions
-      # - uses: ./.github/actions/rust-setup
       - name: cargo fmt
         run: |
           cd ${{ inputs.src-dir }}
@@ -47,12 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
-        uses: actions/checkout@v3
-        with:
-          repository: orcalabs/github-actions
-          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          path: .github/actions
-      - uses: ./.github/actions/rust-setup
+        uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
@@ -69,12 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
-        uses: actions/checkout@v3
-        with:
-          repository: orcalabs/github-actions
-          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          path: .github/actions
-      - uses: ./.github/actions/rust-setup
+        uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
@@ -91,12 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
-        uses: actions/checkout@v3
-        with:
-          repository: orcalabs/github-actions
-          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          path: .github/actions
-      - uses: ./.github/actions/rust-setup
+        uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
