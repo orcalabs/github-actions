@@ -31,6 +31,8 @@ runs:
       run: |
         rustup install ${{ inputs.rust-version }}
         rustup default ${{ inputs.rust-version }}
+        rustup component add clippy
+        rustup component add rustfmt
     - name: setup cloudsmith cargo registry
       shell: bash
       if: ${{ inputs.cloudsmith-cargo-registry }}
