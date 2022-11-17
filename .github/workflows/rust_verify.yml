@@ -51,7 +51,7 @@ jobs:
           path: .github/actions
       - uses: ./.github/actions/rust-setup
         with:
-          dependencies: ${{ input.dependencies }}
+          dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           cache-key: clippy-target
@@ -72,7 +72,7 @@ jobs:
           path: .github/actions
       - uses: ./.github/actions/rust-setup
         with:
-          dependencies: ${{ input.dependencies }}
+          dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           cache-key: doc-target
@@ -93,7 +93,7 @@ jobs:
           path: .github/actions
       - uses: ./.github/actions/rust-setup
         with:
-          dependencies: ${{ input.dependencies }}
+          dependencies: ${{ inputs.dependencies }}
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           cache-key: test-target
