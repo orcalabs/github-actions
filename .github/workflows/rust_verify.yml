@@ -6,19 +6,20 @@ on:
     inputs:
       dependencies:
         required: false
+        type: string
         description: "A list of ubuntu packages to install"
       image-build-command:
         required: false
+        type: string
         description: "A command for building docker images"
-      cache-key:
-        required: false
-        description: "A component of the key used for caching"
       src-dir:
         required: false
         default: "src"
+        type: string
         description: "Path to rust source code"
       rust-version:
         required: false
+        type: string
         description: "Specific rust version to use, defaults to the latest"
 
 jobs:
