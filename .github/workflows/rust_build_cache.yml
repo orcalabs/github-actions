@@ -30,10 +30,12 @@ jobs:
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
       - uses: Swatinem/rust-cache@v2
+        id: cache
         with:
           save-if: false
           shared-key: shared
-      - name: build cache
+      - if: steps.cache.cache-hit != 'true'
+        name: build cache
         run: |
           cd ${{ inputs.src-dir }}
           cargo clippy --all-targets --all-features
