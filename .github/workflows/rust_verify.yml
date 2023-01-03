@@ -1,5 +1,8 @@
 name: Rust Verify
 
+env:
+  SQLX_OFFLINE: true
+
 on:
   workflow_call:
     inputs:
