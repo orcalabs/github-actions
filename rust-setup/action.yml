@@ -14,9 +14,6 @@ inputs:
   cloudsmith-git-api-key:
     required: false
     description: "The CLOUDSMITH_GIT_API_KEY secret"
-  cache-key:
-    required: false
-    description: "A component of the key used for caching"
 
 runs:
   using: composite
@@ -45,11 +42,3 @@ runs:
       run: |
         git config --global credential.helper store
         echo '${{ inputs.cloudsmith-git-api-key }}' > ~/.git-credentials
-    - name: cache
-      if: ${{ inputs.cache-key }}
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cargo/registry
-          src/target
-        key: ${{ runner.os }}-${{ inputs.cache-key }}-${{ hashFiles('**/Cargo.*') }}
