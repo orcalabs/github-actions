@@ -1,5 +1,8 @@
 name: Rust Build Cache
 
+env:
+  SQLX_OFFLINE: true
+
 on:
   workflow_call:
     inputs:
