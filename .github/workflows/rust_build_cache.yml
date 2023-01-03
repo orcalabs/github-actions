@@ -36,7 +36,7 @@ jobs:
         id: cache
         with:
           shared-key: shared
-      - if: steps.cache.cache-hit != 'true'
+      - if: steps.cache.outputs.cache-hit != 'true'
         name: build cache
         run: |
           cd ${{ inputs.src-dir }}
