@@ -51,6 +51,9 @@ jobs:
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
       - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: shared
       - name: cargo clippy
         run: |
           cd ${{ inputs.src-dir }}
@@ -68,6 +71,9 @@ jobs:
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
       - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: shared
       - name: cargo doc
         run: |
           cd ${{ inputs.src-dir }}
@@ -85,6 +91,9 @@ jobs:
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
       - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: shared
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
