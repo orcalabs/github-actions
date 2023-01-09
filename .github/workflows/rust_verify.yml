@@ -53,6 +53,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
+          workspaces: ${{ inputs.src-dir }}
           shared-key: shared
       - name: cargo clippy
         run: |
@@ -73,6 +74,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
+          workspaces: ${{ inputs.src-dir }}
           shared-key: shared
       - name: cargo doc
         run: |
@@ -93,6 +95,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
+          workspaces: ${{ inputs.src-dir }}
           shared-key: shared
       - name: build images
         if: ${{ inputs.image-build-command }}
