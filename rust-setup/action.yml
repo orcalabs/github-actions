@@ -21,7 +21,9 @@ runs:
     - name: install dependencies
       shell: bash
       if: ${{ inputs.dependencies }}
-      run: echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+      run: |
+        sudo apt-get update -y
+        echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
     - name: install rust version
       shell: bash
       if: ${{ inputs.rust-version }}
