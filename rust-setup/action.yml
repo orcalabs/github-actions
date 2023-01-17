@@ -38,7 +38,6 @@ runs:
         export PROTOC_VERSION=${{ inputs.custom-protoc-version }}
         curl -OL https://github.com/protocolbuffers/protobuf/releases/download/$PROTOC_VERSION/$PROTOC_ZIP \
           && unzip -o $PROTOC_ZIP -d /usr/local bin/protoc \
-          && unzip -o $PROTOC_ZIP -d /usr/local 'include/*' \
           && rm -f $PROTOC_ZIP
     - name: install rust version
       shell: bash
