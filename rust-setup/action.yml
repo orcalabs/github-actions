@@ -5,6 +5,12 @@ inputs:
   dependencies:
     required: false
     description: "A list of ubuntu packages to install"
+  custom-protoc-release-zip:
+    required: false
+    description: "Custrom protoc release page zip name"
+  custom-protoc-version:
+    required: false
+    description: "A custom protoc version"
   rust-version:
     required: false
     description: "Specific rust version to use, defaults to the latest"
@@ -24,6 +30,16 @@ runs:
       run: |
         sudo apt-get update -y
         echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+    - name: install custom protoc
+      shell: bash
+      if: ${{ inputs.custom-protoc }}
+      run: |
+        export PROTOC_ZIP=${{ inputs.custom-protoc-release-zip }}
+        export PROTOC_VERSION=${{ inputs.custom-protoc-version }}
+        curl -OL https://github.com/protocolbuffers/protobuf/releases/download/$PROTOC_VERSION/$PROTOC_ZIP \
+          && unzip -o $PROTOC_ZIP -d /usr/local bin/protoc \
+          && unzip -o $PROTOC_ZIP -d /usr/local 'include/*' \
+          && rm -f $PROTOC_ZIP
     - name: install rust version
       shell: bash
       if: ${{ inputs.rust-version }}

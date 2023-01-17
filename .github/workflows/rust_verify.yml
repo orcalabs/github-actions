@@ -23,6 +23,14 @@ on:
         required: false
         type: string
         description: "Specific rust version to use, defaults to the latest"
+      custom-protoc-release-zip:
+        required: false
+        type: string
+        description: "Custrom protoc release page zip name"
+      custom-protoc-version:
+        required: false
+        type: string
+        description: "A custom protoc version"
 
 jobs:
   fmt:
@@ -50,6 +58,8 @@ jobs:
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
@@ -71,6 +81,8 @@ jobs:
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
@@ -92,6 +104,8 @@ jobs:
           cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
           cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
