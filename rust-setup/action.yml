@@ -34,11 +34,9 @@ runs:
       shell: bash
       if: ${{ inputs.custom-protoc-version }}
       run: |
-        export PROTOC_ZIP=${{ inputs.custom-protoc-release-zip }}
-        export PROTOC_VERSION=${{ inputs.custom-protoc-version }}
-        curl -OL https://github.com/protocolbuffers/protobuf/releases/download/$PROTOC_VERSION/$PROTOC_ZIP \
-          && unzip -o $PROTOC_ZIP -d /usr/local bin/protoc \
-          && rm -f $PROTOC_ZIP
+        curl -OL https://github.com/protocolbuffers/protobuf/releases/download/${{ inputs.custom-protoc-version }}/${{ inputs.custom-protoc-release-zip }} \
+          && unzip -o ${{ inputs.custom-protoc-release-zip }} -d /usr/local bin/protoc \
+          && rm -f ${{ inputs.custom-protoc-release-zip }}
     - name: install rust version
       shell: bash
       if: ${{ inputs.rust-version }}
