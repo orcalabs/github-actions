@@ -19,6 +19,14 @@ on:
         required: false
         type: string
         description: "Specific rust version to use, defaults to the latest"
+      custom-protoc-release-zip:
+        required: false
+        type: string
+        description: "Custrom protoc release page zip name"
+      custom-protoc-version:
+        required: false
+        type: string
+        description: "A custom protoc version"
 
 jobs:
   build-cache:
