@@ -31,6 +31,10 @@ on:
         required: false
         type: string
         description: "A custom protoc version"
+      openapi-bins:
+        required: false
+        type: string
+        description: "OpenAPI binaries to run and validate"
 
 jobs:
   fmt:
@@ -118,3 +122,36 @@ jobs:
         run: |
           cd ${{ inputs.src-dir }}
           cargo test
+
+  openapi:
+    if: ${{ inputs.openapi-bins }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout Orca Labs github actions
+        uses: orcalabs/github-actions/rust-setup@master
+        with:
+          dependencies: ${{ inputs.dependencies }}
+          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
+          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install swagger-cli
+        run: npm install -g swagger-cli
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          workspaces: ${{ inputs.src-dir }}
+          shared-key: shared
+      - name: Produce openapi-spec
+        run: |
+          cd ${{ inputs.src-dir }}
+          echo "${{ inputs.openapi-bins }}" | xargs -t -I {} sh -c 'cargo run --bin "$1" > "$1.json"' -- {}
+      - name: Validate OpenAPI definition
+        run: |
+          cd ${{ inputs.src-dir }}
+          echo "${{ inputs.openapi-bins }}" | xargs -t -I {} swagger-cli validate "{}.json"
