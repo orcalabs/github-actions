@@ -54,3 +54,4 @@ jobs:
           cargo clippy --all-targets --all-features
           cargo doc --no-deps --document-private-items
           cargo test build
+          cargo build
