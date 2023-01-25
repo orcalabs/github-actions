@@ -1,0 +1,47 @@
+name: Update rust dependencies
+
+on:
+  workflow_call:
+    inputs:
+      src-dir:
+        type: string
+        required: false
+        default: src
+        description: Path to rust source code
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-edit
+        run: cargo install cargo-edit
+      - name: Update dependencies
+        run: |
+          cd ${{ inputs.src-dir }}
+          git config --global credential.helper store
+          echo '${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}' > ~/.cargo/config
+          echo '${{ secrets.CLOUDSMITH_GIT_API_KEY }}' > ~/.git-credentials
+          cargo upgrade
+          cargo update
+      - name: Check for changes
+        id: status
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Create PR
+        if: steps.status.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_PAT_TOKEN }}
+        run: |
+          git add .
+          git checkout -b ${{ github.event.repository.name }}-${{ github.sha }}
+          git config --local user.email github-actions@github.com
+          git config --local user.name github-actions
+          git commit -am "Update rust dependencies"
+          git push -u origin HEAD
+          gh pr create -B master -H ${{ github.event.repository.name }}-${{ github.sha }} --title 'Merge rust-dependencies-update' --body 'Created by Github action'
