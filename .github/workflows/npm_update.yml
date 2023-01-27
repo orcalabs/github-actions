@@ -1,0 +1,47 @@
+name: Update npm dependencies
+
+on:
+  workflow_call:
+    inputs:
+      src-dir:
+        type: string
+        required: false
+        default: .
+        description: Path to source code
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install npm-check-updates
+        run: npm install -g npm-check-updates
+      - name: Update dependencies
+        run: |
+          cd ${{ inputs.src-dir }}
+          ncu -u
+      - name: Check for changes
+        id: status
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Create PR
+        if: steps.status.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_PAT_TOKEN }}
+        run: |
+          cd ${{ inputs.src-dir }}
+          rm package-lock.json
+          npm install
+          git checkout -b ${{ github.event.repository.name }}-${{ github.sha }}
+          git config --local user.email github-actions@github.com
+          git config --local user.name github-actions
+          git commit -am "Update npm dependencies"
+          git push -u origin HEAD
+          gh pr create -B master -H ${{ github.event.repository.name }}-${{ github.sha }} --title 'Merge npm-dependencies-update' --body 'Created by Github action'
