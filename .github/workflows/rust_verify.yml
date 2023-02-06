@@ -2,6 +2,7 @@ name: Rust Verify
 
 env:
   SQLX_OFFLINE: true
+  DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
 
 on:
   workflow_call:
@@ -16,9 +17,14 @@ on:
         description: "A command for building docker images"
       src-dir:
         required: false
-        default: "src"
+        default: src
         type: string
         description: "Path to rust source code"
+      sqlx-src-dir:
+        required: false
+        default: postgres
+        type: string
+        description: "Path to sqlx source code (inside src-dir)"
       rust-version:
         required: false
         type: string
@@ -35,6 +41,16 @@ on:
         required: false
         type: string
         description: "OpenAPI binaries to run and validate"
+      check-sqlx:
+        required: false
+        type: boolean
+        default: false
+        description: "Whether to check sqlx or not"
+      postgres-version:
+        required: false
+        type: string
+        default: postgres:15.1-alpine
+        description: "Version of postgres to use in sqlx jobs"
 
 jobs:
   fmt:
@@ -122,6 +138,43 @@ jobs:
         run: |
           cd ${{ inputs.src-dir }}
           cargo test
+
+  sqlx:
+    if: ${{ inputs.check-sqlx }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: ${{ inputs.postgres-version }}
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout Orca Labs github actions
+        uses: orcalabs/github-actions/rust-setup@master
+        with:
+          dependencies: ${{ inputs.dependencies }}
+          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
+          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: sqlx
+          workspaces: ${{ inputs.src-dir }}
+      - name: check sqlx
+        run: |
+          cd ${{ inputs.src-dir }}
+          cd ${{ inputs.sqlx-src-dir }}
+          cargo install sqlx-cli --no-default-features --features postgres,rustls
+          sqlx migrate run
+          cargo sqlx prepare --check
 
   openapi:
     if: ${{ inputs.openapi-bins }}

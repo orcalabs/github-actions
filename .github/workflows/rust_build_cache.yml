@@ -12,9 +12,14 @@ on:
         description: "A list of ubuntu packages to install"
       src-dir:
         required: false
-        default: "src"
+        default: src
         type: string
         description: "Path to rust source code"
+      sqlx-src-dir:
+        required: false
+        default: postgres
+        type: string
+        description: "Path to sqlx source code (inside src-dir)"
       rust-version:
         required: false
         type: string
@@ -27,6 +32,17 @@ on:
         required: false
         type: string
         description: "A custom protoc version"
+      build-sqlx-cache:
+        required: false
+        type: boolean
+        default: false
+        description: "Whether to build sqlx cache or not"
+      postgres-version:
+        required: false
+        type: string
+        default: postgres:15.1-alpine
+        description: "Version of postgres to use in sqlx jobs"
+
 
 jobs:
   build-cache:
@@ -55,3 +71,47 @@ jobs:
           cargo doc --no-deps --document-private-items
           cargo test build
           cargo build
+
+  build-sqlx-cache:
+    if: ${{ inputs.build-sqlx-cache }}
+    runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: false
+      DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
+    services:
+      postgres:
+        image: ${{ inputs.postgres-version }}
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout Orca Labs github actions
+        uses: orcalabs/github-actions/rust-setup@master
+        with:
+          dependencies: ${{ inputs.dependencies }}
+          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
+          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          rust-version: ${{ inputs.rust-version }}
+          custom-protoc-version: ${{ inputs.custom-protoc-version }}
+          custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
+      - name: Install rustup toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@v2
+        id: cache
+        with:
+          shared-key: sqlx
+          workspaces: ${{ inputs.src-dir }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: build cache
+        run: |
+          cd ${{ inputs.src-dir }}
+          cd ${{ inputs.sqlx-src-dir }}
+          cargo install sqlx-cli --no-default-features --features postgres,rustls
+          sqlx migrate run
+          cargo sqlx prepare --check
