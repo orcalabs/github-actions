@@ -47,6 +47,8 @@ jobs:
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
       - name: Generate OpenApi specs
+        env:
+          SQLX_OFFLINE: true
         run: |
           echo '${{ inputs.object }}' > object.json
           LENGTH=$(jq '. | length' object.json)
