@@ -3,6 +3,11 @@ name: Run npm checks
 on:
   workflow_call:
     inputs:
+      src-dir:
+        type: string
+        required: false
+        default: .
+        description: Path to source code
       prettier:
         type: boolean
         required: false
@@ -28,12 +33,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package*.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package*.json', inputs.src-dir)) }}
       - name: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          cd ${{ inputs.src-dir }}
+          npm ci
       - name: prettier
-        run: npx prettier -c .
+        run: |
+          cd ${{ inputs.src-dir }}
+          npx prettier -c .
 
   eslint:
     if: inputs.eslint
@@ -48,9 +57,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package*.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package*.json', inputs.src-dir)) }}
       - name: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          cd ${{ inputs.src-dir }}
+          npm ci
       - name: eslint
-        run: npm run lint -- --max-warnings 0
+        run: |
+          cd ${{ inputs.src-dir }}
+          npm run lint -- --max-warnings 0

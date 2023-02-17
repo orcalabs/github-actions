@@ -1,6 +1,13 @@
 name: Build npm cache
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      src-dir:
+        type: string
+        required: false
+        default: .
+        description: Path to source code
 
 jobs:
   cache:
@@ -15,7 +22,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package*.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package*.json', inputs.src-dir)) }}
       - name: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          cd ${{ inputs.src-dir }}
+          npm ci
