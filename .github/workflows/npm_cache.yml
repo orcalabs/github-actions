@@ -21,7 +21,7 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: ${{ format('{0}/node_modules', inputs.src-dir) }}
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/package*.json', inputs.src-dir)) }}
       - name: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
