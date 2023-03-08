@@ -2,7 +2,6 @@ name: Rust Verify
 
 env:
   SQLX_OFFLINE: true
-  DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
 
 on:
   workflow_call:
@@ -142,6 +141,9 @@ jobs:
   sqlx:
     if: ${{ inputs.check-sqlx }}
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: false
+      DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
     services:
       postgres:
         image: ${{ inputs.postgres-version }}
