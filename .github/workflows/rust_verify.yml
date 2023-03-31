@@ -176,7 +176,7 @@ jobs:
           cd ${{ inputs.sqlx-src-dir }}
           cargo install sqlx-cli --no-default-features --features postgres,rustls
           sqlx migrate run
-          cargo sqlx prepare --check
+          cargo sqlx prepare --check -- --all-features
 
   openapi:
     if: ${{ inputs.openapi-bins }}
