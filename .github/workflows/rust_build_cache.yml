@@ -48,6 +48,7 @@ jobs:
   build-cache:
     runs-on: ubuntu-latest
     steps:
+      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
