@@ -69,6 +69,7 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
+      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -92,6 +93,7 @@ jobs:
   doc:
     runs-on: ubuntu-latest
     steps:
+      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -155,6 +157,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
+      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -183,6 +186,7 @@ jobs:
     if: ${{ inputs.openapi-bins }}
     runs-on: ubuntu-latest
     steps:
+      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
