@@ -10,7 +10,7 @@ runs:
     - name: Disk cleanup
       shell: bash
       run: |
-          sudo apt update
+          sudo apt-get update
 
           sudo apt remove --purge -y -qqq \
               dotnet* \
