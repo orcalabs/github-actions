@@ -50,18 +50,7 @@ on:
         type: string
         default: postgres:15.1-alpine
         description: "Version of postgres to use in sqlx jobs"
-      image_keys:
-        required: true
-        type: string
-        description: List of keys into `images_to_build` input
-      images_to_build:
-        required: true
-        type: string
-        description: JSON object of images to build and push
-      tag:
-        required: false
-        type: string
-        description: Tag to set for all built images
+
 jobs:
   fmt:
     runs-on: ubuntu-latest
@@ -147,14 +136,6 @@ jobs:
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
-      - name: build images
-        if: ${{ inputs.images_to_build }}
-        uses: orcalabs/github-actions/images@master
-        with:
-          should_push: false
-          keys: ${{ inputs.image_keys }}
-          object: ${{ inputs.images_to_build }}
-          tag: latest
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
