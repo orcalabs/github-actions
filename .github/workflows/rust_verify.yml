@@ -133,6 +133,7 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+      - uses: docker/setup-buildx-action@v2
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
