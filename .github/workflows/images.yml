@@ -6,7 +6,7 @@ on:
       keys:
         required: true
         type: string
-        description: List of keys into `object` input 
+        description: List of keys into `object` input
       object:
         required: true
         type: string
@@ -15,6 +15,15 @@ on:
         required: false
         type: string
         description: Aks repository to update image tags
+      should_push:
+        required: false
+        type: boolean
+        description: Wether to push to the registry or not
+        default: true
+      tag:
+        required: false
+        type: string
+        description: Tag to set for all built images
 
 jobs:
   setup-matrix:
@@ -47,9 +56,9 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          push: true
+          push: ${{ inputs.should_push }}
           file: ${{ fromJson(inputs.object)[matrix.value]['dockerfile'] }}
-          tags: ${{ fromJson(inputs.object)[matrix.value]['registry'] }}:${{ github.sha }}
+          tags: ${{ fromJson(inputs.object)[matrix.value]['registry'] }}:${{ inputs.tag || github.sha }}
           secrets: |
             git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
 
