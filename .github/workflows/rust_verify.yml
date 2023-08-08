@@ -67,9 +67,8 @@ jobs:
           cargo fmt -- --check
 
   clippy:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-2vcpu-ubuntu-2204
     steps:
-      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -85,15 +84,15 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+          cache-provider: buildjet
       - name: cargo clippy
         run: |
           cd ${{ inputs.src-dir }}
           cargo clippy --all-targets --all-features
 
   doc:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-2vcpu-ubuntu-2204
     steps:
-      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -108,15 +107,15 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+          cache-provider: buildjet
       - name: cargo doc
         run: |
           cd ${{ inputs.src-dir }}
           cargo doc --no-deps --document-private-items
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
-      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -132,6 +131,7 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+          cache-provider: buildjet
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
@@ -156,7 +156,6 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -183,9 +182,8 @@ jobs:
 
   openapi:
     if: ${{ inputs.openapi-bins }}
-    runs-on: ubuntu-latest
+    runs-on: buildjet-2vcpu-ubuntu-2204
     steps:
-      - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
@@ -206,6 +204,7 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+          cache-provider: buildjet
       - name: Produce openapi-spec
         run: |
           cd ${{ inputs.src-dir }}

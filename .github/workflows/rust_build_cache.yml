@@ -46,7 +46,7 @@ on:
 
 jobs:
   build-cache:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v3
@@ -64,6 +64,7 @@ jobs:
         with:
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
+          cache-provider: buildjet
       - if: steps.cache.outputs.cache-hit != 'true'
         name: build cache
         run: |

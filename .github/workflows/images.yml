@@ -29,7 +29,7 @@ jobs:
           echo "value=[\"$(cat temp)\"]" >> $GITHUB_OUTPUT
 
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     needs: [ setup-matrix ]
     strategy:
       matrix:
@@ -83,6 +83,7 @@ jobs:
             kustomize edit set image $REGISTRY:${{ github.sha }}
             cd -
           done
+          rm object.json
       - name: Commit and push
         env:
           GITHUB_TOKEN: ${{ secrets.CI_PAT_TOKEN }}
