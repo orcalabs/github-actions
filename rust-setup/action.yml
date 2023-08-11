@@ -13,6 +13,7 @@ inputs:
     description: "A custom protoc version"
   rust-version:
     required: false
+    default: stable
     description: "Specific rust version to use, defaults to the latest"
   cloudsmith-cargo-registry:
     required: false
@@ -37,14 +38,9 @@ runs:
         curl -OL https://github.com/protocolbuffers/protobuf/releases/download/${{ inputs.custom-protoc-version }}/${{ inputs.custom-protoc-release-zip }} \
           && unzip -o ${{ inputs.custom-protoc-release-zip }} -d /usr/local bin/protoc \
           && rm -f ${{ inputs.custom-protoc-release-zip }}
-    - name: install rust version
-      shell: bash
-      if: ${{ inputs.rust-version }}
-      run: |
-        rustup install ${{ inputs.rust-version }}
-        rustup default ${{ inputs.rust-version }}
-        rustup component add clippy
-        rustup component add rustfmt
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ inputs.rust-version }}
     - name: setup cloudsmith cargo registry
       shell: bash
       if: ${{ inputs.cloudsmith-cargo-registry }}
