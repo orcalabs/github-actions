@@ -40,7 +40,7 @@ runs:
           && rm -f ${{ inputs.custom-protoc-release-zip }}
     - uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: ${{ inputs.rust-version }}
+        toolchain: ${{ inputs.rust-version || 'stable' }}
     - name: setup cloudsmith cargo registry
       shell: bash
       if: ${{ inputs.cloudsmith-cargo-registry }}
