@@ -49,7 +49,7 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: orcalabs/github-actions/disk-cleanup@master
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -89,7 +89,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
