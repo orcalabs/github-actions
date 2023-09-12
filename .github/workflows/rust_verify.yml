@@ -19,9 +19,12 @@ on:
         default: src
         type: string
         description: "Path to rust source code"
+      sqlx-migrations-dir:
+        required: false
+        type: string
+        description: "Path to sqlx migrations directory"
       sqlx-src-dir:
         required: false
-        default: postgres
         type: string
         description: "Path to sqlx source code (inside src-dir)"
       rust-version:
@@ -172,13 +175,29 @@ jobs:
           save-if: false
           shared-key: sqlx
           workspaces: ${{ inputs.src-dir }}
-      - name: check sqlx
+      - name: install sqlx
+        run: cargo install sqlx-cli --no-default-features --features postgres,rustls
+      - name: migrate sqlx
         run: |
           cd ${{ inputs.src-dir }}
-          cd ${{ inputs.sqlx-src-dir }}
-          cargo install sqlx-cli --no-default-features --features postgres,rustls
+          if [ ! -z "${{ inputs.sqlx-src-dir }}" ]; then
+            cd ${{ inputs.sqlx-src-dir }}
+          elif [ ! -z "${{ inputs.sqlx-migrations-dir }}" ]; then
+            cd ${{ inputs.sqlx-migrations-dir }}
+          else
+            echo 'Either `sqlx-src-dir` or `sqlx-migrations-dir` must be specified'
+            exit 1
+          fi
           sqlx migrate run
-          cargo sqlx prepare --check -- --all-features
+      - name: sqlx prepare check
+        run: |
+          cd ${{ inputs.src-dir }}
+          if [ ! -z "${{ inputs.sqlx-src-dir }}" ]; then
+            cd ${{ inputs.sqlx-src-dir }}
+            cargo sqlx prepare --check -- --all-features
+          else
+            cargo sqlx prepare --check --workspace -- --all-features
+          fi
 
   openapi:
     if: ${{ inputs.openapi-bins }}
