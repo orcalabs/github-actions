@@ -70,7 +70,7 @@ jobs:
          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy container app
-        uses: azure/container-apps-deploy-action@v1
+        uses: azure/container-apps-deploy-action@v2
         with:
          containerAppName: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
          containerAppEnvironment: ${{ inputs.container-app-env-name }}
