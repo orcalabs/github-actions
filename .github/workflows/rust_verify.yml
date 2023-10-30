@@ -218,7 +218,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Install swagger-cli
