@@ -5,6 +5,9 @@ inputs:
   dependencies:
     required: false
     description: "A list of ubuntu packages to install"
+  pip-packages:
+    required: false
+    description: "A list of pip packages to install"
   custom-protoc-release-zip:
     required: false
     description: "Custrom protoc release page zip name"
@@ -31,6 +34,13 @@ runs:
       run: |
         sudo apt-get update -y
         echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+    - name: install dependencies
+      shell: bash
+      if: ${{ inputs.pip-packages }}
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install python3-pip
+        echo ${{ inputs.pip-packages }} | sed -e 's/\n//g' | xargs sudo pip3 install
     - name: install custom protoc
       shell: bash
       if: ${{ inputs.custom-protoc-version }}
