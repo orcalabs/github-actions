@@ -220,7 +220,7 @@ jobs:
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Install openapi-generator-cli
         run: npm install -g @openapitools/openapi-generator-cli
       - uses: Swatinem/rust-cache@v2
