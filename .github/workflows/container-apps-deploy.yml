@@ -71,6 +71,7 @@ jobs:
 
       - name: Deploy container app
         uses: azure/container-apps-deploy-action@v2
+        if: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
         with:
          containerAppName: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
          containerAppEnvironment: ${{ inputs.container-app-env-name }}
