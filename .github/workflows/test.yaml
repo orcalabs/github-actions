@@ -1,0 +1,5 @@
+properties:
+  managedEnvironmentId: /subscriptions/622507a-02a3-40e1-a744-1d9e45db98d7resourceGroups/dev/providers/Microsoft.App/managedEnvironments/kyogre-dev
+  template:
+    init_containers:
+      - image: ghcr.io/orcalabs/kyogre/database-migrator:latest
