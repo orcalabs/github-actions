@@ -57,6 +57,11 @@ on:
         type: string
         default: postgres:15.1-alpine
         description: "Version of postgres to use in sqlx jobs"
+      onnxruntime:
+        required: false
+        type: boolean
+        default: false
+        description: "Whether to download the onnxruntime"
 
 jobs:
   fmt:
@@ -143,6 +148,12 @@ jobs:
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
+      - name: download onnxruntime
+        if: ${{ inputs.onnxruntime }}
+        run: |
+          wget "https://github.com/microsoft/onnxruntime/releases/download/v1.17.0/onnxruntime-linux-x64-1.17.0.tgz"
+          tar xvf onnxruntime-linux-x64-1.17.0.tgz
+          sudo mv onnxruntime-linux-x64-1.17.0/lib/libonnxruntime.so.1.17.0 /usr/lib/libonnxruntime.so.1.17.0
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
