@@ -153,7 +153,7 @@ jobs:
         run: |
           wget "https://github.com/microsoft/onnxruntime/releases/download/v1.17.0/onnxruntime-linux-x64-1.17.0.tgz"
           tar xvf onnxruntime-linux-x64-1.17.0.tgz
-          sudo mv onnxruntime-linux-x64-1.17.0/lib/libonnxruntime.so.1.17.0 /usr/lib/libonnxruntime.so.1.17.0
+          export ORT_DYLIB_PATH=$PWD/onnxruntime-linux-x64-1.17.0/lib/libonnxruntime.so.1.17.0
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
@@ -245,7 +245,8 @@ jobs:
         run: |
           wget "https://github.com/microsoft/onnxruntime/releases/download/v1.17.0/onnxruntime-linux-x64-1.17.0.tgz"
           tar xvf onnxruntime-linux-x64-1.17.0.tgz
-          sudo mv onnxruntime-linux-x64-1.17.0/lib/libonnxruntime.so.1.17.0 /usr/lib/libonnxruntime.so.1.17.0
+          export ORT_DYLIB_PATH=$PWD/onnxruntime-linux-x64-1.17.0/lib/libonnxruntime.so.1.17.0
+
       - name: Produce openapi-spec
         run: |
           cd ${{ inputs.src-dir }}
