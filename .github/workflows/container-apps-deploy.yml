@@ -19,6 +19,18 @@ on:
         required: true
         type: string
         description: Name of the container apps env to deploy to
+      init-container:
+        required: false
+        type: boolean
+        description: If an init container should be built and pushed prior to deployment
+      init-container-registry:
+        required: false
+        type: string
+        description: The registry of the init containers docker image
+      init-container-file:
+        required: false
+        type: string
+        description: Path to the init containers dockerfile
 
 permissions:
   id-token: write
@@ -26,8 +38,39 @@ permissions:
   packages: write
 
 jobs:
+  build-and-push-init-container:
+    if: ${{ inputs.init-container }}
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+        # See related issues
+        # https://github.com/docker/build-push-action/issues/761#issuecomment-1575006515
+        # https://github.com/moby/buildkit/issues/3969
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.11.6
+            network=host
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.init-container-registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: true
+          file: ${{ inputs.init-container-file }}
+          tags: ${{ inputs.init-container-file }}:latest
+          secrets: |
+            git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+
   setup-matrix:
     runs-on: ubuntu-latest
+    needs: [build-and-push-init-container]
+    if: ${{ !cancelled() && !failure() }}
     outputs:
       matrix: ${{ steps.matrix.outputs.value }}
     steps:
