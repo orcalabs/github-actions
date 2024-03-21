@@ -63,7 +63,7 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           file: ${{ inputs.init-container-file }}
-          tags: ${{ inputs.init-container-file }}:latest
+          tags: ${{ inputs.init-container-registry }}:latest
           secrets: |
             git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
 
