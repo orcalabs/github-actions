@@ -83,6 +83,7 @@ jobs:
   build-and-deploy:
     runs-on: buildjet-4vcpu-ubuntu-2204
     needs: [ setup-matrix ]
+    if: ${{ !cancelled() && !failure() }}
     strategy:
       matrix:
         value: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
