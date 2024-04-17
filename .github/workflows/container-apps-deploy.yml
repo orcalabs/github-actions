@@ -3,34 +3,22 @@ name: Build and deploy container apps images
 on:
   workflow_call:
     inputs:
-      keys:
-        required: true
-        type: string
-        description: List of keys into `object` input
       object:
         required: true
         type: string
         description: JSON object of images to build and push
-      resource-group:
+      registry:
         required: true
+        type: string
+        description: The registry of the docker images
+      container-app-resource-group:
+        required: false
         type: string
         description: Which resource group to deploy to
       container-app-env-name:
-        required: true
+        required: false
         type: string
         description: Name of the container apps env to deploy to
-      init-container:
-        required: false
-        type: boolean
-        description: If an init container should be built and pushed prior to deployment
-      init-container-registry:
-        required: false
-        type: string
-        description: The registry of the init containers docker image
-      init-container-file:
-        required: false
-        type: string
-        description: Path to the init containers dockerfile
 
 permissions:
   id-token: write
@@ -38,55 +26,21 @@ permissions:
   packages: write
 
 jobs:
-  build-and-push-init-container:
-    if: ${{ inputs.init-container }}
-    runs-on: buildjet-4vcpu-ubuntu-2204
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-        # See related issues
-        # https://github.com/docker/build-push-action/issues/761#issuecomment-1575006515
-        # https://github.com/moby/buildkit/issues/3969
-        with:
-          driver-opts: |
-            image=moby/buildkit:v0.11.6
-            network=host
-      - uses: docker/login-action@v3
-        with:
-          registry: ${{ inputs.init-container-registry }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v5
-        with:
-          context: .
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          push: true
-          file: ${{ inputs.init-container-file }}
-          tags: ${{ inputs.init-container-registry }}:latest
-          secrets: |
-            git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
-
-  setup-matrix:
+  setup-build-matrix:
     runs-on: ubuntu-latest
-    needs: [build-and-push-init-container]
-    if: ${{ !cancelled() && !failure() }}
     outputs:
       matrix: ${{ steps.matrix.outputs.value }}
     steps:
       - id: matrix
-        run: |
-          echo "${{ inputs.keys }}" | xargs -I {} printf '{}","' >> temp
-          truncate -s-3 temp
-          echo "value=[\"$(cat temp)\"]" >> $GITHUB_OUTPUT
+        run: echo "value=$(echo '${{ inputs.object }}' | jq -c 'keys')" >> $GITHUB_OUTPUT
 
-  build-and-deploy:
+  build-and-push:
     runs-on: buildjet-4vcpu-ubuntu-2204
-    needs: [ setup-matrix ]
+    needs: [ setup-build-matrix ]
     if: ${{ !cancelled() && !failure() }}
     strategy:
       matrix:
-        value: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+        value: ${{ fromJson(needs.setup-build-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -99,7 +53,7 @@ jobs:
             network=host
       - uses: docker/login-action@v3
         with:
-          registry: ${{ fromJson(inputs.object)[matrix.value]['registry'] }}
+          registry: ${{ inputs.registry }}/${{ matrix.value }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v5
@@ -109,10 +63,29 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           file: ${{ fromJson(inputs.object)[matrix.value]['dockerfile'] }}
-          tags: ${{ fromJson(inputs.object)[matrix.value]['registry'] }}:${{ github.sha }}
+          tags: ${{ inputs.registry }}/${{ matrix.value }}:${{ github.sha }}
           secrets: |
             git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
 
+  setup-deploy-matrix:
+    runs-on: ubuntu-latest
+    needs: [ build-and-push ]
+    if: ${{ !cancelled() && !failure() }}
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - id: matrix
+        run: |
+          echo "value=$(echo '${{ inputs.object }}' | jq -c 'with_entries(select(.value | has("container-app-name"))) | keys')" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ setup-deploy-matrix ]
+    if: ${{ !cancelled() && !failure() }}
+    strategy:
+      matrix:
+        value: ${{ fromJson(needs.setup-deploy-matrix.outputs.matrix) }}
+    steps:
       - name: Log in to Azure
         uses: azure/login@v2
         with:
@@ -122,10 +95,8 @@ jobs:
 
       - name: Deploy container app
         uses: azure/container-apps-deploy-action@v2
-        if: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
         with:
          containerAppName: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
          containerAppEnvironment: ${{ inputs.container-app-env-name }}
-         resourceGroup: ${{ inputs.resource-group }}
-         imageToDeploy: ${{ fromJson(inputs.object)[matrix.value]['registry'] }}:${{ github.sha }}
-
+         resourceGroup: ${{ inputs.container-app-resource-group }}
+         imageToDeploy: ${{ inputs.registry }}/${{ matrix.value }}:${{ github.sha }}
