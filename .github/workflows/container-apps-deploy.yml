@@ -63,7 +63,7 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           file: ${{ fromJson(inputs.object)[matrix.value]['dockerfile'] }}
-          tags: ${{ inputs.registry }}/${{ matrix.value }}:${{ github.sha }}
+          tags: ${{ inputs.registry }}/${{ matrix.value }}:${{ fromJson(inputs.object)[matrix.value]['tag-override'] || github.sha }}
           secrets: |
             git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
 
@@ -99,4 +99,4 @@ jobs:
          containerAppName: ${{ fromJson(inputs.object)[matrix.value]['container-app-name'] }}
          containerAppEnvironment: ${{ inputs.container-app-env-name }}
          resourceGroup: ${{ inputs.container-app-resource-group }}
-         imageToDeploy: ${{ inputs.registry }}/${{ matrix.value }}:${{ github.sha }}
+         imageToDeploy: ${{ inputs.registry }}/${{ matrix.value }}:${{ fromJson(inputs.object)[matrix.value]['tag-override'] || github.sha }}
