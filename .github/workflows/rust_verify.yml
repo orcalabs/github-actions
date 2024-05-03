@@ -185,7 +185,6 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
