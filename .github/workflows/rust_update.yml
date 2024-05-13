@@ -45,7 +45,9 @@ jobs:
 
           cat results.json | jq -s 'add' > versions.json
 
-          VERSION=$(cat versions.json | jq -r '.[].name' | sort --version-sort | grep 'latest-rust-[0-9.]\+-bullseye' | tail -n 1)
+          DEBIAN_VERSION=$(grep 'latest-rust-[0-9.]+-\w+' dockerfiles/ -RhoP | head -n 1 | grep -oP '\w+$')
+
+          VERSION=$(cat versions.json | jq -r '.[].name' | sort --version-sort | grep "latest-rust-[0-9.]\+-$DEBIAN_VERSION" | tail -n 1)
           sed -i "s/latest-rust-[0-9.]\+-[a-z-]\+/$VERSION/" dockerfiles/**/*
 
           rm results.json versions.json
