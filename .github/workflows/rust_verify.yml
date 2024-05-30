@@ -62,6 +62,11 @@ on:
         type: boolean
         default: false
         description: "Whether to download the onnxruntime"
+      cargo-features:
+        required: false
+        type: string
+        default: false
+        description: "Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features"
 
 jobs:
   fmt:
@@ -100,8 +105,13 @@ jobs:
       - name: cargo clippy
         run: |
           cd ${{ inputs.src-dir }}
-          cargo clippy --all-targets --all-features
-
+          if [ "${{ inputs.cargo-features }}" == "" ]; then
+            cargo clippy --all-targets
+          elif [ -z "${{ inputs.cargo-features }}" ]; then
+            cargo clippy --all-targets --features ${{ inputs.cargo-features }};
+          else
+            cargo clippy --all-targets --all-features
+          fi
   doc:
     runs-on: buildjet-2vcpu-ubuntu-2204
     steps:
@@ -207,11 +217,19 @@ jobs:
       - name: sqlx prepare check
         run: |
           cd ${{ inputs.src-dir }}
+
+          features="--all-features"
+          if [ "${{ inputs.cargo-features }}" == "" ]; then
+            features=""
+          elif [ -z "${{ inputs.cargo-features }}" ]; then
+            features="--features ${{ inputs.cargo-features }}"
+          fi
+
           if [ ! -z "${{ inputs.sqlx-src-dir }}" ]; then
             cd ${{ inputs.sqlx-src-dir }}
-            cargo sqlx prepare --check -- --all-features
+            cargo sqlx prepare --check -- $features
           else
-            cargo sqlx prepare --check --workspace -- --all-features
+            cargo sqlx prepare --check --workspace -- $features
           fi
 
   openapi:
