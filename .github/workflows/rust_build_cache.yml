@@ -45,7 +45,11 @@ on:
         type: string
         default: postgres:15.1-alpine
         description: "Version of postgres to use in sqlx jobs"
-
+      cargo-features:
+        required: false
+        type: string
+        default: false
+        description: "Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features"
 
 jobs:
   build-cache:
@@ -72,7 +76,13 @@ jobs:
         name: build cache
         run: |
           cd ${{ inputs.src-dir }}
-          cargo clippy --all-targets --all-features
+          if [ "${{ inputs.cargo-features }}" == "" ]; then
+            cargo clippy --all-targets
+          elif [ -z "${{ inputs.cargo-features }}" ]; then
+            cargo clippy --all-targets --features ${{ inputs.cargo-features }};
+          else
+            cargo clippy --all-targets --all-features
+          fi
           cargo doc --no-deps --document-private-items
           cargo test build
           cargo build
@@ -128,9 +138,18 @@ jobs:
         name: build cache
         run: |
           cd ${{ inputs.src-dir }}
+
+          features="--all-features"
+          if [ "${{ inputs.cargo-features }}" == "" ]; then
+            features=""
+          elif [ -z "${{ inputs.cargo-features }}" ]; then
+            features="--features ${{ inputs.cargo-features }}"
+          fi
+
           if [ ! -z "${{ inputs.sqlx-src-dir }}" ]; then
             cd ${{ inputs.sqlx-src-dir }}
-            cargo sqlx prepare --check -- --all-features
+            cargo sqlx prepare --check -- $features
           else
-            cargo sqlx prepare --check --workspace -- --all-features
+            cargo sqlx prepare --check --workspace -- $features
           fi
+
