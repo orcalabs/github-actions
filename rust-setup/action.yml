@@ -57,7 +57,7 @@ runs:
       if: ${{ inputs.cloudsmith-cargo-registry }}
       run: |
         git config --global credential.helper store
-        echo '${{ inputs.cloudsmith-cargo-registry }}' > ~/.cargo/config
+        echo '${{ inputs.cloudsmith-cargo-registry }}' > ~/.cargo/config.toml
     - name: setup cloudsmith git api key
       shell: bash
       if: ${{ inputs.cloudsmith-git-api-key }}
