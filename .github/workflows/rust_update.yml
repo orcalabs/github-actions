@@ -19,15 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: orcalabs/github-actions/rust-setup@master
+        with:
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
       - name: Install cargo-edit
         run: cargo install cargo-edit
       - name: Update dependencies
         run: |
           cd ${{ inputs.src-dir }}
-          git config --global credential.helper store
-          echo '${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}' > ~/.cargo/config.toml
-          echo '${{ secrets.CLOUDSMITH_GIT_API_KEY }}' > ~/.git-credentials
           cargo upgrade
           cargo update
       - name: Update cargo-chef
