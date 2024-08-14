@@ -18,12 +18,9 @@ inputs:
     required: false
     default: stable
     description: "Specific rust version to use, defaults to the latest"
-  cloudsmith-cargo-registry:
+  cloudsmith-api-key:
     required: false
-    description: "The CLOUDSMITH_CARGO_REGISTRY secret"
-  cloudsmith-git-api-key:
-    required: false
-    description: "The CLOUDSMITH_GIT_API_KEY secret"
+    description: "The CLOUDSMITH_API_KEY secret"
 
 runs:
   using: composite
@@ -61,4 +58,3 @@ runs:
           index = \"sparse+https://cargo.cloudsmith.io/orcalabs/orcastrator/\"
           token = \"Token $API_KEY\"
           credential-provider = \"cargo:token\"" >> ~/.cargo/config.toml
-
