@@ -185,6 +185,7 @@ jobs:
           save-if: false
           shared-key: sqlx
           workspaces: ${{ inputs.src-dir }}
+          cache-provider: buildjet
       - name: install sqlx
         run: cargo install sqlx-cli --no-default-features --features postgres,rustls
       - name: migrate sqlx
