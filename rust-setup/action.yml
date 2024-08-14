@@ -25,12 +25,56 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: install dependencies
+
+    # - name: update package repository
+    #   shell: bash
+    #   if: ${{ inputs.dependencies }}
+    #   run: |
+    #     sudo apt-get update -y
+
+    # - name: cached apt packages
+    #   uses: awalsh128/cache-apt-pkgs-action@latest
+    #   if: ${{ inputs.dependencies }}
+    #   with:
+    #     packages: ${{ inputs.dependencies }}
+    #     version: 1.0
+
+    # - name: install dependencies
+    #   shell: bash
+    #   if: ${{ inputs.dependencies }}
+    #   run: |
+    #     echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+
+    - name: Update apt package list
       shell: bash
-      if: ${{ inputs.dependencies }}
+      run: sudo apt-get update -y
+
+    - name: Restore apt cache
+      id: apt-cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          /var/lib/apt/lists
+          /var/cache/apt/archives
+        key: apt-${{ inputs.dependencies }}
+
+    - name: Install apt packages
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      shell: bash
       run: |
-        sudo apt-get update -y
+        # xargs sudo apt-get install -y < apt-packages.txt
         echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
+      # Ensure that 'apt-packages.txt' contains a list of packages to be installed
+
+    # - name: Save apt cache
+    #   if: steps.apt-cache.outputs.cache-hit != 'true'
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       /var/lib/apt/lists
+    #       /var/cache/apt/archives
+    #     key: apt-${{ inputs.dependencies }}
+
     - name: install dependencies
       shell: bash
       if: ${{ inputs.pip-packages }}

@@ -69,7 +69,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup@master
+        uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
@@ -83,13 +83,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup@master
+        uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
+
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
@@ -110,7 +111,7 @@ jobs:
     runs-on: buildjet-2vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v4
-      - uses: orcalabs/github-actions/rust-setup@master
+      - uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -133,7 +134,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup@master
+        uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           dependencies: ${{ inputs.dependencies }}
           pip-packages: ${{ inputs.pip-packages }}
@@ -141,6 +142,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
+
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
@@ -173,7 +175,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup@master
+        uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -224,7 +226,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
-        uses: orcalabs/github-actions/rust-setup@master
+        uses: orcalabs/github-actions/rust-setup@cache-apt-packages
         with:
           dependencies: ${{ inputs.dependencies }}
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
