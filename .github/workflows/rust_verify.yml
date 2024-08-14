@@ -86,8 +86,7 @@ jobs:
         uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
-          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
@@ -114,8 +113,7 @@ jobs:
       - uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
-          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
@@ -139,8 +137,7 @@ jobs:
         with:
           dependencies: ${{ inputs.dependencies }}
           pip-packages: ${{ inputs.pip-packages }}
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
-          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
@@ -179,8 +176,7 @@ jobs:
         uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
-          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
@@ -230,8 +226,7 @@ jobs:
         uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
-          cloudsmith-git-api-key: ${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}

@@ -52,15 +52,13 @@ runs:
       with:
         toolchain: ${{ inputs.rust-version || 'stable' }}
         components: clippy, rustfmt
-    - name: setup cloudsmith cargo registry
+    - name: setup cloudsmith credentials
       shell: bash
-      if: ${{ inputs.cloudsmith-cargo-registry }}
+      if: ${{ inputs.cloudsmith-api-key }}
       run: |
-        git config --global credential.helper store
-        echo '${{ inputs.cloudsmith-cargo-registry }}' > ~/.cargo/config.toml
-    - name: setup cloudsmith git api key
-      shell: bash
-      if: ${{ inputs.cloudsmith-git-api-key }}
-      run: |
-        git config --global credential.helper store
-        echo '${{ inputs.cloudsmith-git-api-key }}' > ~/.git-credentials
+        export API_KEY=${{ inputs.cloudsmith-api-key }}
+        echo "[registries.orcalabs-orcastrator]
+          index = \"sparse+https://cargo.cloudsmith.io/orcalabs/orcastrator/\"
+          token = \"Token $API_KEY\"
+          credential-provider = \"cargo:token\"" >> ~/.cargo/config.toml
+
