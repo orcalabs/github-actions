@@ -116,6 +116,7 @@ jobs:
         with:
           shared-key: sqlx
           workspaces: ${{ inputs.src-dir }}
+          cache-provider: buildjet
       - if: steps.cache.outputs.cache-hit != 'true'
         name: install sqlx
         run: cargo install sqlx-cli --no-default-features --features postgres,rustls
