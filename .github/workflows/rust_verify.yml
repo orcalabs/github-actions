@@ -71,7 +71,7 @@ jobs:
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
-          cloudsmith-cargo-registry: ${{ secrets.CLOUDSMITH_CARGO_REGISTRY }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
       - name: cargo fmt
         run: |
