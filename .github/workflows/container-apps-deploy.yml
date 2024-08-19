@@ -65,7 +65,7 @@ jobs:
           file: ${{ fromJson(inputs.object)[matrix.value]['dockerfile'] }}
           tags: ${{ inputs.registry }}/${{ matrix.value }}:${{ fromJson(inputs.object)[matrix.value]['tag-override'] || github.sha }}
           secrets: |
-            git-credentials=${{ secrets.CLOUDSMITH_GIT_API_KEY }}
+            cloudsmith-api-key=${{ secrets.CLOUDSMITH_API_KEY }}
 
   setup-deploy-matrix:
     runs-on: ubuntu-latest
