@@ -35,7 +35,7 @@ jobs:
         run: echo "value=$(echo '${{ inputs.object }}' | jq -c 'keys')" >> $GITHUB_OUTPUT
 
   build-and-push:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     needs: [ setup-build-matrix ]
     if: ${{ !cancelled() && !failure() }}
     strategy:
