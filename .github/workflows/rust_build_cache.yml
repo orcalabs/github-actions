@@ -53,7 +53,7 @@ on:
 
 jobs:
   build-cache:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: orcalabs/github-actions/disk-cleanup@master
       - uses: actions/checkout@v4
@@ -88,7 +88,7 @@ jobs:
 
   build-sqlx-cache:
     if: ${{ inputs.build-sqlx-cache }}
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     env:
       SQLX_OFFLINE: false
       DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
