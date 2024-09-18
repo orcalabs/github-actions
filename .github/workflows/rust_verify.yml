@@ -243,7 +243,7 @@ jobs:
         with:
           node-version: 20
       - name: Install openapi-generator-cli
-        run: npm install -g @openapitools/openapi-generator-cli
+        run: npm install -g @openapitools/openapi-generator-cli@2.13.5
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: false
