@@ -1,26 +1,26 @@
-name: "Rust Setup"
-description: "Sets up an environment for running rust commands (clippy, doc, test, etc.)"
+name: 'Rust Setup'
+description: 'Sets up an environment for running rust commands (clippy, doc, test, etc.)'
 
 inputs:
   dependencies:
     required: false
-    description: "A list of ubuntu packages to install"
-  pip-packages:
+    description: 'A list of ubuntu packages to install'
+  pip-requirements:
     required: false
-    description: "A list of pip packages to install"
+    description: 'A list of requirements.txt files to install'
   custom-protoc-release-zip:
     required: false
-    description: "Custrom protoc release page zip name"
+    description: 'Custrom protoc release page zip name'
   custom-protoc-version:
     required: false
-    description: "A custom protoc version"
+    description: 'A custom protoc version'
   rust-version:
     required: false
     default: stable
-    description: "Specific rust version to use, defaults to the latest"
+    description: 'Specific rust version to use, defaults to the latest'
   cloudsmith-api-key:
     required: false
-    description: "The CLOUDSMITH_API_KEY secret"
+    description: 'The CLOUDSMITH_API_KEY secret'
 
 runs:
   using: composite
@@ -31,13 +31,13 @@ runs:
       run: |
         sudo apt-get update -y
         echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
-    - name: install dependencies
-      shell: bash
-      if: ${{ inputs.pip-packages }}
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install python3-pip
-        echo ${{ inputs.pip-packages }} | sed -e 's/\n//g' | xargs sudo pip3 install
+    - name: install python dependencies
+      uses: getsentry/action-setup-venv@v2.1.0
+      if: ${{ inputs.pip-requirements }}
+      with:
+        python-version: 3.10.7
+        cache-dependency-path: ${{ inputs.pip-requirements }}
+        install-cmd: echo ${{ inputs.pip-requirements }} | sed -e 's/\n//g' | xargs pip3 install -r
     - name: install custom protoc
       shell: bash
       if: ${{ inputs.custom-protoc-version }}

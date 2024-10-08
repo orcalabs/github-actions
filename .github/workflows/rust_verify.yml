@@ -9,63 +9,63 @@ on:
       dependencies:
         required: false
         type: string
-        description: "A list of ubuntu packages to install"
-      pip-packages:
+        description: 'A list of ubuntu packages to install'
+      pip-requirements:
         required: false
         type: string
-        description: "A list of pip packages to install"
+        description: 'A list of requirements.txt files to install'
       image-build-command:
         required: false
         type: string
-        description: "A command for building docker images"
+        description: 'A command for building docker images'
       src-dir:
         required: false
         default: src
         type: string
-        description: "Path to rust source code"
+        description: 'Path to rust source code'
       sqlx-migrations-dir:
         required: false
         type: string
-        description: "Path to sqlx migrations directory"
+        description: 'Path to sqlx migrations directory'
       sqlx-src-dir:
         required: false
         type: string
-        description: "Path to sqlx source code (inside src-dir)"
+        description: 'Path to sqlx source code (inside src-dir)'
       rust-version:
         required: false
         type: string
-        description: "Specific rust version to use, defaults to the latest"
+        description: 'Specific rust version to use, defaults to the latest'
       custom-protoc-release-zip:
         required: false
         type: string
-        description: "Custrom protoc release page zip name"
+        description: 'Custrom protoc release page zip name'
       custom-protoc-version:
         required: false
         type: string
-        description: "A custom protoc version"
+        description: 'A custom protoc version'
       openapi-bins:
         required: false
         type: string
-        description: "OpenAPI binaries to run and validate"
+        description: 'OpenAPI binaries to run and validate'
       check-sqlx:
         required: false
         type: boolean
         default: false
-        description: "Whether to check sqlx or not"
+        description: 'Whether to check sqlx or not'
       postgres-version:
         required: false
         type: string
         default: postgres:15.1-alpine
-        description: "Version of postgres to use in sqlx jobs"
+        description: 'Version of postgres to use in sqlx jobs'
       cargo-features:
         required: false
         type: string
         default: false
-        description: "Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features"
+        description: 'Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features'
       cargo-test-features:
         required: false
         type: string
-        description: "Comma separated list of features to pass to cargo test, defaults to no features"
+        description: 'Comma separated list of features to pass to cargo test, defaults to no features'
 
 jobs:
   fmt:
@@ -140,7 +140,7 @@ jobs:
         uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
-          pip-packages: ${{ inputs.pip-packages }}
+          pip-requirements: ${{ inputs.pip-requirements }}
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
