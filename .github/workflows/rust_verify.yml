@@ -62,10 +62,6 @@ on:
         type: string
         default: false
         description: 'Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features'
-      cargo-test-features:
-        required: false
-        type: string
-        description: 'Comma separated list of features to pass to cargo test, defaults to no features'
 
 jobs:
   fmt:
@@ -157,11 +153,7 @@ jobs:
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
-          if [ -z "${{ inputs.cargo-test-features }}" ]; then
-            cargo test
-          else
-            cargo test --features ${{ inputs.cargo-test-features }};
-          fi
+          cargo test --all-features
 
   sqlx:
     if: ${{ inputs.check-sqlx }}
@@ -213,9 +205,9 @@ jobs:
           cd ${{ inputs.src-dir }}
 
           features="--all-features"
-          if [ "${{ inputs.cargo-features }}" == "" ]; then
+          if [ -z "${{ inputs.cargo-features }}" ]; then
             features=""
-          elif [ -z "${{ inputs.cargo-features }}" ]; then
+          elif [ "${{ inputs.cargo-features }}" != "false" ]; then
             features="--features ${{ inputs.cargo-features }}"
           fi
 
