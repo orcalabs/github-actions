@@ -153,7 +153,15 @@ jobs:
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
-          cargo test --all-features
+
+          features="--all-features"
+          if [ -z "${{ inputs.cargo-features }}" ]; then
+            features=""
+          elif [ "${{ inputs.cargo-features }}" != "false" ]; then
+            features="--features ${{ inputs.cargo-features }}"
+          fi
+
+          cargo test $features
 
   sqlx:
     if: ${{ inputs.check-sqlx }}
