@@ -18,6 +18,10 @@ on:
         required: false
         type: string
         description: 'A command for building docker images'
+      image-pull-command:
+        required: false
+        type: string
+        description: 'A command for pulling docker images'
       src-dir:
         required: false
         default: src
@@ -150,6 +154,18 @@ jobs:
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
+
+      - name: docker login
+        if: ${{ inputs.image-pull-command }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: pull images
+        if: ${{ inputs.image-pull-command }}
+        run: ${{ inputs.image-pull-command }}
+
       - name: cargo test
         run: |
           cd ${{ inputs.src-dir }}
