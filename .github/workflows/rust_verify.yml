@@ -61,6 +61,10 @@ on:
         type: string
         default: postgres:15.1-alpine
         description: 'Version of postgres to use in sqlx jobs'
+      wait-for-check-name:
+        required: false
+        type: string
+        description: 'The name of the check to wait on finishing before running tests'
       cargo-features:
         required: false
         type: string
@@ -135,6 +139,15 @@ jobs:
   test:
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
+      - name: Wait for check to complete
+        if: ${{ inputs.wait-for-check-name }}
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: master
+          check-name: ${{ inputs.wait-for-check-name }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
