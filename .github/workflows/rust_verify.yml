@@ -143,10 +143,11 @@ jobs:
         if: ${{ inputs.wait-for-check-name }}
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
-          ref: master
+          ref: ais-retry
           check-name: ${{ inputs.wait-for-check-name }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
+          # allowed-conclusions: success,skipped
 
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
