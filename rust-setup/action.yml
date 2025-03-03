@@ -32,7 +32,7 @@ runs:
         sudo apt-get update -y
         echo ${{ inputs.dependencies }} | sed -e 's/\n//g' | xargs sudo apt install
     - name: install python dependencies
-      uses: getsentry/action-setup-venv@v2.1.0
+      uses: getsentry/action-setup-venv@main
       if: ${{ inputs.pip-requirements }}
       with:
         python-version: 3.10.7
