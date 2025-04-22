@@ -22,12 +22,13 @@ jobs:
       - uses: orcalabs/github-actions/rust-setup@master
         with:
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-      - name: Install cargo-edit
-        run: cargo install cargo-edit
+      # TODO: re-add if cargo-edit starts working again, currently fails with 401 unauthorized
+      # - name: Install cargo-edit
+      #   run: cargo install cargo-edit
       - name: Update dependencies
         run: |
           cd ${{ inputs.src-dir }}
-          cargo upgrade
+          # cargo upgrade
           cargo update
       - name: Update cargo-chef
         if: ${{ inputs.cargo-chef }}
