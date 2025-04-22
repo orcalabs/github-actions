@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: orcalabs/github-actions/rust-setup@master
+      - uses: orcalabs/github-actions/rust-setup@test
         with:
           cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
       - name: Install cargo-edit

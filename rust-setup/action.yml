@@ -58,3 +58,4 @@ runs:
           index = \"sparse+https://cargo.cloudsmith.io/orcalabs/orcastrator/\"
           token = \"Token $API_KEY\"
           credential-provider = \"cargo:token\"" >> ~/.cargo/config.toml
+        cat ~/.cargo/config.toml
