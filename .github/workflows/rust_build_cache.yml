@@ -9,47 +9,47 @@ on:
       dependencies:
         required: false
         type: string
-        description: "A list of ubuntu packages to install"
+        description: 'A list of ubuntu packages to install'
       src-dir:
         required: false
         default: src
         type: string
-        description: "Path to rust source code"
+        description: 'Path to rust source code'
       sqlx-migrations-dir:
         required: false
         type: string
-        description: "Path to sqlx migrations directory"
+        description: 'Path to sqlx migrations directory'
       sqlx-src-dir:
         required: false
         type: string
-        description: "Path to sqlx source code (inside src-dir)"
+        description: 'Path to sqlx source code (inside src-dir)'
       rust-version:
         required: false
         type: string
-        description: "Specific rust version to use, defaults to the latest"
+        description: 'Specific rust version to use, defaults to the latest'
       custom-protoc-release-zip:
         required: false
         type: string
-        description: "Custrom protoc release page zip name"
+        description: 'Custrom protoc release page zip name'
       custom-protoc-version:
         required: false
         type: string
-        description: "A custom protoc version"
+        description: 'A custom protoc version'
       build-sqlx-cache:
         required: false
         type: boolean
         default: false
-        description: "Whether to build sqlx cache or not"
+        description: 'Whether to build sqlx cache or not'
       postgres-version:
         required: false
         type: string
         default: postgres:15.1-alpine
-        description: "Version of postgres to use in sqlx jobs"
+        description: 'Version of postgres to use in sqlx jobs'
       cargo-features:
         required: false
         type: string
         default: false
-        description: "Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features"
+        description: 'Comma separated list of features to pass to cargo, defaults to --all-features. Pass an empty string to enable no features'
 
 jobs:
   build-cache:
@@ -121,6 +121,10 @@ jobs:
         name: install sqlx
         run: cargo install sqlx-cli --no-default-features --features postgres,rustls
       - if: steps.cache.outputs.cache-hit != 'true'
+        name: rm .env
+        run: |
+          [ -f .env ] && rm .env
+      - if: steps.cache.outputs.cache-hit != 'true'
         name: migrate sqlx
         run: |
           cd ${{ inputs.src-dir }}
@@ -151,4 +155,3 @@ jobs:
           else
             cargo sqlx prepare --check --workspace -- $features
           fi
-

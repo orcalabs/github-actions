@@ -236,7 +236,10 @@ jobs:
             echo 'Either `sqlx-src-dir` or `sqlx-migrations-dir` must be specified'
             exit 1
           fi
-          sqlx migrate run
+          sqlx migrate run --no-dotenv
+      - name: rm .env
+        run: |
+          [ -f .env ] && rm .env
       - name: sqlx prepare check
         run: |
           cd ${{ inputs.src-dir }}
@@ -250,9 +253,9 @@ jobs:
 
           if [ ! -z "${{ inputs.sqlx-src-dir }}" ]; then
             cd ${{ inputs.sqlx-src-dir }}
-            cargo sqlx prepare --check -- --all-targets $features
+            cargo sqlx prepare --no-dotenv --check -- --all-targets $features
           else
-            cargo sqlx prepare --check --workspace -- --all-targets $features
+            cargo sqlx prepare --no-dotenv --check --workspace -- --all-targets $features
           fi
 
   openapi:
