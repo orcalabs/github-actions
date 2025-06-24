@@ -65,7 +65,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.7.7
+      - uses: Swatinem/rust-cache@v2.7.8
         id: cache
         with:
           workspaces: ${{ inputs.src-dir }}
@@ -111,7 +111,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.7.7
+      - uses: Swatinem/rust-cache@v2.7.8
         id: cache
         with:
           shared-key: sqlx
