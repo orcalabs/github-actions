@@ -141,7 +141,7 @@ jobs:
     steps:
       - name: Wait for check to complete
         if: ${{ inputs.wait-for-check-name }}
-        uses: lewagon/wait-on-check-action@v1.4.0
+        uses: lewagon/wait-on-check-action@v1.4.1
         with:
           ref: master
           check-name: ${{ inputs.wait-for-check-name }}
