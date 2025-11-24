@@ -75,7 +75,7 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -89,7 +89,7 @@ jobs:
   clippy:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -117,7 +117,7 @@ jobs:
   doc:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: orcalabs/github-actions/rust-setup@master
         with:
           dependencies: ${{ inputs.dependencies }}
@@ -148,7 +148,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -208,7 +208,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
@@ -262,7 +262,7 @@ jobs:
     if: ${{ inputs.openapi-bins }}
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout Orca Labs github actions
         uses: orcalabs/github-actions/rust-setup@master
         with:
