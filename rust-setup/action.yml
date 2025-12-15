@@ -45,7 +45,7 @@ runs:
         curl -OL https://github.com/protocolbuffers/protobuf/releases/download/${{ inputs.custom-protoc-version }}/${{ inputs.custom-protoc-release-zip }} \
           && unzip -o ${{ inputs.custom-protoc-release-zip }} -d /usr/local bin/protoc \
           && rm -f ${{ inputs.custom-protoc-release-zip }}
-    - uses: dtolnay/rust-toolchain@stable
+    - uses: dtolnay/rust-toolchain@1.91.1
       with:
         toolchain: ${{ inputs.rust-version || 'stable' }}
         components: clippy, rustfmt
