@@ -87,7 +87,7 @@ jobs:
           cargo fmt -- --check
 
   clippy:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-8core
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
@@ -103,7 +103,6 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
-          cache-provider: buildjet
       - name: cargo clippy
         run: |
           cd ${{ inputs.src-dir }}
@@ -115,7 +114,7 @@ jobs:
             cargo clippy --all-targets --all-features
           fi
   doc:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: orcalabs/github-actions/rust-setup@master
@@ -130,14 +129,13 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
-          cache-provider: buildjet
       - name: cargo doc
         run: |
           cd ${{ inputs.src-dir }}
           cargo doc --no-deps --document-private-items
 
   test:
-    runs-on: buildjet-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-8core
     steps:
       - name: Wait for check to complete
         if: ${{ inputs.wait-for-check-name }}
@@ -163,7 +161,6 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
-          cache-provider: buildjet
       - name: build images
         if: ${{ inputs.image-build-command }}
         run: ${{ inputs.image-build-command }}
@@ -194,7 +191,7 @@ jobs:
 
   sqlx:
     if: ${{ inputs.check-sqlx }}
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-8core
     env:
       SQLX_OFFLINE: false
       DATABASE_URL: postgres://127.0.0.1:5432?user=postgres&password=postgres
@@ -222,7 +219,6 @@ jobs:
           save-if: false
           shared-key: sqlx
           workspaces: ${{ inputs.src-dir }}
-          cache-provider: buildjet
       - name: install sqlx
         run: cargo install sqlx-cli --no-default-features --features postgres,rustls
       - name: migrate sqlx
@@ -260,7 +256,7 @@ jobs:
 
   openapi:
     if: ${{ inputs.openapi-bins }}
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-8core
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Orca Labs github actions
@@ -281,8 +277,6 @@ jobs:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
           shared-key: shared
-          cache-provider: buildjet
-
       - name: Produce openapi-spec
         run: |
           cd ${{ inputs.src-dir }}
