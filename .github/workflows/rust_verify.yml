@@ -98,7 +98,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.8.2
+      - uses: Swatinem/rust-cache@v2.9.1
         with:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
@@ -124,7 +124,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.8.2
+      - uses: Swatinem/rust-cache@v2.9.1
         with:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
@@ -156,7 +156,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.8.2
+      - uses: Swatinem/rust-cache@v2.9.1
         with:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
@@ -231,7 +231,7 @@ jobs:
           rust-version: ${{ inputs.rust-version }}
           custom-protoc-version: ${{ inputs.custom-protoc-version }}
           custom-protoc-release-zip: ${{ inputs.custom-protoc-release-zip }}
-      - uses: Swatinem/rust-cache@v2.8.2
+      - uses: Swatinem/rust-cache@v2.9.1
         with:
           save-if: false
           shared-key: sqlx
@@ -289,7 +289,7 @@ jobs:
           node-version: 20
       - name: Install openapi-generator-cli
         run: npm install -g @openapitools/openapi-generator-cli
-      - uses: Swatinem/rust-cache@v2.8.2
+      - uses: Swatinem/rust-cache@v2.9.1
         with:
           save-if: false
           workspaces: ${{ inputs.src-dir }}
