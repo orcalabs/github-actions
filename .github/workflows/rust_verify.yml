@@ -189,6 +189,23 @@ jobs:
 
           cargo test $features
 
+  sqlx-fmt:
+    if: ${{ inputs.check-sqlx }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout Orca Labs github actions
+        uses: orcalabs/github-actions/rust-setup@master
+        with:
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+          rust-version: ${{ inputs.rust-version }}
+      - name: install sql-formatter
+        run: npm install -g sql-formatter
+      - name: install injectfmt
+        run: cargo install --git https://github.com/orcalabs/injectfmt --no-default-features -F rust
+      - name: injectfmt
+        run: injectfmt --check ${{ inputs.src-dir }}
+
   sqlx:
     if: ${{ inputs.check-sqlx }}
     runs-on: ubuntu-latest-8core
