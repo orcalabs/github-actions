@@ -23,6 +23,10 @@ on:
         required: false
         default: true
         description: Whether to run tsc job
+      tsconfig:
+        type: string
+        required: false
+        description: Path to tsconfig
 
 jobs:
   prettier:
@@ -95,4 +99,8 @@ jobs:
       - name: tsc
         run: |
           cd ${{ inputs.src-dir }}
-          npx tsc
+          if [ -z "${{ inputs.tsconfig }}" ]; then
+            npx tsc
+          else
+            npx tsc -p ${{ inputs.tsconfig }}
+          fi
